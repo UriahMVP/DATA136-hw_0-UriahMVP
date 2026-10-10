@@ -1,4 +1,4 @@
-# This is a different comment which does not alter the script's functionality
+# This comment resolves the merging conflict
 import sys
 import random
 
