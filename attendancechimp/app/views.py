@@ -37,13 +37,12 @@ def time_view(request):
     current_time = datetime.now(CDT)
     return HttpResponse(current_time.strftime("%H:%M"))
 
-
 def sum_view(request):
-    """Return the sum of two query parameters as JSON."""
+    """Return the sum of two numbers as an HTML paragraph."""
     n1 = float(request.GET.get("n1", 0))
     n2 = float(request.GET.get("n2", 0))
 
-    return JsonResponse({"sum": n1 + n2})
+    return HttpResponse(f"<p>{n1 + n2}</p>", content_type="text/html")
 
 
 # ---------------------------------------------------------------------------
