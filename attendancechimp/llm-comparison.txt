@@ -1,0 +1,15 @@
+My model focuses on storing the data and ChatGPT also implements parts of the
+attendance-verification logic.
+The LLM version so much longer and commented better and is more
+feature-complete, particularly for cheating prevention and attendance
+analytics. It introduces a lot more features and complexity than HW3,
+and my prompt, requires
+
+My model is way simpler and probably easier to implement because it is 
+shorter and just focused on the six required tables and without adding 
+unnecessary functionality. The LLM-generated model is more complete 
+i suppose, it does QR code expiration, attendance verification, enrollment 
+timestamps, etc. While these additions increase function, 
+they also introduce greater complexity 
+My model is better because it is straightforward and 
+not because i need to cope a little
