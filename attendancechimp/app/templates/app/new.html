@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - AttendanceChimp</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        form { display: inline-block; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>AttendanceChimp</h1>
+    <h2>Create an Account</h2>
+
+    <form action="/app/createUser" method="POST">
+        {% csrf_token %}
+
+        <label>Username:</label>
+        <input type="text" name="user_name" required>
+        <p></p>
+
+        <label>Email:</label>
+        <input type="email" name="email" required>
+        <p></p>
+
+        <label>Password:</label>
+        <input type="password" name="password" required>
+        <p></p>
+
+        <label>Role:</label>
+        <input type="radio" name="is_student" value="1" required>
+        Student
+
+        <input type="radio" name="is_student" value="0">
+        Instructor
+
+        <p><button type="submit">Sign Up</button></p>
+    </form>
+</body>
+</html>
