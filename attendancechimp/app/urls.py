@@ -8,5 +8,12 @@ urlpatterns = [
     path("", views.index, name="home"),
     path("index.html", views.index, name="index_html"),
     path("new", views.new, name="new"),
-    path("createUser",views.createUser,name="createUser")
+    path("new_course", views.new_course),
+    path("new_lecture", views.new_lecture),
+    path("new_qr_upload", views.new_qr_upload),
+    path("createUser",views.createUser,name="createUser"),
+    path("createCourse", views.createCourse),
+    path("createLecture", views.createLecture),
+    path("createQRCodeUpload", views.createQRCodeUpload),
+    path("dumpUploads", views.dumpUploads),
 ]

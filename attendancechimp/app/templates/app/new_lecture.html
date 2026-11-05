@@ -1,0 +1,13 @@
+<h2>Create Lecture</h2>
+
+<form action="/app/createLecture" method="POST">
+    {% csrf_token %}
+
+    <select name="choice" required>
+        {% for course in courses %}
+            <option value="{{ course.name }}">{{ course.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Create Lecture</button>
+</form>
