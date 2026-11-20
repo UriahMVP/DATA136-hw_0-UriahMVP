@@ -31,6 +31,7 @@ from .models import (
     Course,
     Lecture,
     QRCodeUpload,
+    getUploadsForCourse,
 )
 
 # from .models import (InstructorProfile, StudentProfile, Course, Enrollment,
@@ -143,20 +144,33 @@ def createCourse(request):
         return HttpResponse(status=405)
 
     name = request.POST.get("course-name")
+    course_number = request.POST.get("course-number") or name
     start = request.POST.get("start-time")
     end = request.POST.get("end-time")
 
-    days = []
-    for day in ["mon", "tue", "wed", "thu", "fri"]:
-        if request.POST.get("day-" + day):
-            days.append(day)
+    if not all([name, course_number, start, end]):
+        return HttpResponse(status=400)
 
-    schedule = f"{','.join(days)} {start}-{end}"
+    days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+
+    selected_days = {
+        day: bool(request.POST.get("day-" + day))
+        for day in days
+    }
+
+    schedule = (
+        f"{','.join(day for day in days if selected_days[day])} "
+        f"{start}-{end}"
+    )
 
     Course.objects.create(
         name=name,
+        course=course_number,
         instructor=instructor,
-        meeting_sched=schedule
+        meeting_sched=schedule,
+        start_time=start,
+        end_time=end,
+        **selected_days
     )
 
     return HttpResponse(status=200)
