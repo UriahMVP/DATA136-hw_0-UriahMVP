@@ -240,5 +240,33 @@ def dumpUploads(request):
 # HW6  — getUploads
 # ---------------------------------------------------------------------------
 
+def getUploads(request):
+    if (
+        not request.user.is_authenticated
+        or not InstructorProfile.objects.filter(user=request.user).exists()
+    ):
+        return JsonResponse({"error": "Unauthorized"}, status=401)
 
+    course = request.GET.get("course")
+
+    if not course:
+        return JsonResponse(
+            {"error": "Missing course parameter"},
+            status=400
+        )
+
+    uploads = getUploadsForCourse(course)
+
+    results = [
+        {
+            "username": upload.student.user.username,
+            "upload_time": timezone.localtime(
+                upload.uploaded_at,
+                ZoneInfo("America/Chicago")
+            ).strftime("%Y-%m-%d %H:%M:%S")
+        }
+        for upload in uploads
+    ]
+
+    return JsonResponse(results, safe=False)
 

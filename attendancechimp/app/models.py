@@ -18,6 +18,9 @@ Entities
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import logging
 import string
@@ -57,6 +60,23 @@ class Course(models.Model):
     instructor = models.ForeignKey(InstructorProfile, on_delete=models.CASCADE)
     meeting_sched = models.CharField(max_length=100)
     department = models.CharField(max_length=100, blank=True)
+
+    course = models.CharField(max_length=20, unique=True, null=True, blank=True)
+
+    mon = models.BooleanField(default=False)
+    tue = models.BooleanField(default=False)
+    wed = models.BooleanField(default=False)
+    thu = models.BooleanField(default=False)
+    fri = models.BooleanField(default=False)
+    sat = models.BooleanField(default=False)
+    sun = models.BooleanField(default=False)
+
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+
+    def meets_on_day(self, weekday):
+        days = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+        return getattr(self, days[weekday])
 
     def __str__(self):
         return self.name
@@ -105,5 +125,34 @@ class QRCodeUpload(models.Model):
 # Helper / API functions
 # ---------------------------------------------------------------------------
 
+def getUploadsForCourse(course):
+    selected_course = Course.objects.filter(course=course).first()
+
+    if selected_course is None:
+        return []
+
+    if selected_course.start_time is None or selected_course.end_time is None:
+        return []
+
+    uploads = QRCodeUpload.objects.filter(
+        lecture__course=selected_course
+    )
+
+    valid_uploads = []
+    chicago = ZoneInfo("America/Chicago")
+
+    for upload in uploads:
+        local_dt = timezone.localtime(upload.uploaded_at, chicago)
+
+        weekday = local_dt.weekday()
+        upload_time = local_dt.time()
+
+        if (
+            selected_course.meets_on_day(weekday)
+            and selected_course.start_time <= upload_time <= selected_course.end_time
+        ):
+            valid_uploads.append(upload)
+
+    return valid_uploads
 
 
